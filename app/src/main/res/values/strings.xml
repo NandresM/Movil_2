@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Actividad_3</string>
+    <string name="tvVersionAndroidLB">Versión de Android:</string>
+    <string name="tvVersionAndroid"></string>
+    <string name="tvLight">2. Luz:</string>
+    <string name="btnOff">Apagar</string>
+    <string name="btnOn">Encender</string>
+    <string name="tvLevelBatterry">3. Nivel de Batería:</string>
+    <string name="tvLevelBatterry_2"></string>
+    <string name="tvStorage">4. Almacenamiento:</string>
+    <string name="etNameFile">Nombre del Archivo</string>
+    <string name="btnSaveFile">Guardar Archivo</string>
+    <string name="tvConnectionLB">5. Estado de Conexión:</string>
+    <string name="tvState"></string>
+
+
+
+</resources>
