@@ -103,15 +103,15 @@
         android:text="@string/tvState"/>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/bluetooth"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Blutu" />
+        android:text="@string/btnBlutu" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/camara"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Camra" />
+        android:text="@string/btnCamara" />
 
 </LinearLayout>

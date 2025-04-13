@@ -21,13 +21,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+public class mainActivity extends AppCompatActivity {
 
     private Context context;
     private Activity activity;
@@ -51,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     //private CLFile clFile
 
     private TextView tvState;
+    private Button blutu;
+    private Button cam;
 
 
     @SuppressLint("MissingInflatedId")
@@ -69,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
         offFlash.setOnClickListener(this::offLigth);
         baterryFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         registerReceiver(broReceiver, baterryFilter);
+        blutu.setOnClickListener(this::abrirBt);
+        cam.setOnClickListener(this::abrirCam);
+
 
 
 
@@ -96,11 +100,14 @@ public class MainActivity extends AppCompatActivity {
         this.versionAndroid = findViewById(R.id.tvVersionAndroid);
         this.pbLevelBaterry = findViewById(R.id.pbLevelBattery);
         this.tvLevelBaterry = findViewById(R.id.tvLevelBatteryLB);
-        this.tvConexion = findViewById(R.id.tvState);
+        //this.tvConexion = findViewById(R.id.tvState);
         this.nameFile = findViewById(R.id.etNameFile);
         this.onFlash = findViewById(R.id.btnOn);
         this.offFlash = findViewById(R.id.btnOff);
+        this.tvState = findViewById(R.id.tvState);
         //definir los bluetooh
+        this.blutu = findViewById(R.id.bluetooth);
+        this.cam = findViewById(R.id.camara);
 
     }
 
@@ -158,6 +165,16 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
+    public void abrirBt(View view) {
+        Intent intent = new Intent(this, bluetooth.class);
+        startActivity(intent);
+
+    }
+
+    public void abrirCam(View view) {
+        Intent intent = new Intent(this, camera.class);
+        startActivity(intent);
+    }
 
 
 

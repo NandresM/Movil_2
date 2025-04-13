@@ -12,6 +12,20 @@
     <string name="btnSaveFile">Guardar Archivo</string>
     <string name="tvConnectionLB">5. Estado de Conexión:</string>
     <string name="tvState"></string>
+    <string name="btnBlutu">bluetooth</string>
+    <string name="btnCamara">Camara</string>
+
+    <string name="tvBluetoothStatus">Estado de Bluetooth:</string>
+    <string name="btnBlOn">Encender</string>
+    <string name="btnBlOff">Apagar</string>
+    <string name="state"></string>
+    <string name="tvDispositivos">Dispositivos Vinculados:</string>
+    <string name="listVinculados"></string>
+
+
+    <string name="tvCamara">TOMA DE FOTO</string>
+    <string name="tomarFt">Tomar Foto</string>
+    <string name="guardarFt">Guardar Foto</string>
 
 
 
