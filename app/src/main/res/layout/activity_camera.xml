@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="50dp"
+    tools:context=".camera">
+
+    <TextView
+        android:id="@+id/tvCamara"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:text="@string/tvCamara"
+        android:textSize="30sp"
+        android:gravity="center" />
+
+    <ImageView
+        android:id="@+id/fotoCamara"
+        android:layout_width="match_parent"
+        android:layout_height="407dp"
+        android:scaleType="centerCrop"
+        android:layout_marginBottom="16dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <Button
+        android:id="@+id/tomarFt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tomarFt" />
+
+    <Button
+        android:id="@+id/guardarFt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/guardarFt" />
+</LinearLayout>

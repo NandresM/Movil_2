@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".bluetooth">
+
+    <TextView
+        android:id="@+id/tvBluetoothStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="Encendido de Bluetooth"
+        android:textSize="20sp" />
+
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="55dp" >
+
+        <Button
+            android:id="@+id/btnBlOn"
+            android:layout_width="201dp"
+            android:layout_height="wrap_content"
+            android:text="@string/btnBlOn" />
+
+        <Button
+            android:id="@+id/btnBlOff"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:text="@string/btnBlOff" />
+
+    </TableRow>
+
+    <TextView
+        android:id="@+id/state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/state"
+        android:hint="Aca se mira el estado"/>
+
+    <TextView
+        android:id="@+id/tvDispositivos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tvDispositivos"
+         />
+
+    <ListView
+        android:id="@+id/listVinculados"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp" />
+
+</LinearLayout>
