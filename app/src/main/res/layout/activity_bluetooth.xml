@@ -49,6 +49,12 @@
         android:text="@string/tvDispositivos"
          />
 
+    <Button
+        android:id="@+id/btnListVinculados"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnListVinculados" />
+
     <ListView
         android:id="@+id/listVinculados"
         android:layout_width="match_parent"

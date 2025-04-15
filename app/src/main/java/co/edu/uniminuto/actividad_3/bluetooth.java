@@ -11,7 +11,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,17 +28,23 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class bluetooth extends AppCompatActivity {
 
     private Button btnBlOn;
     private Button btnBlOff;
+    private Button btnListVinculados;
     public TextView state;
     private BluetoothAdapter bluetoothAdapter;
-    private List<BluetoothDevice> listVinculados;
+    private ListView listVinculados;
+    private ArrayAdapter<String> deviceListAdapter;
+    private ArrayList<String> deviceList;
+    private ArrayList<BluetoothDevice> deviceObjects;
 
     
     
+    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +58,9 @@ public class bluetooth extends AppCompatActivity {
         initObjects();
         btnBlOn.setOnClickListener(this::blutuOn);
         btnBlOff.setOnClickListener(this::blutuOff);
+        btnListVinculados.setOnClickListener(this::listaVinculados);
+
+        setupListVinculados();
 
         // Inicializar el adaptador Bluetooth
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -59,6 +70,9 @@ public class bluetooth extends AppCompatActivity {
             Toast.makeText(this, "Este dispositivo no soporta Bluetooth", Toast.LENGTH_SHORT).show();
             state.setText("Bluetooth no soportado");
         }
+
+
+
 
 
     }
@@ -77,6 +91,7 @@ public class bluetooth extends AppCompatActivity {
                 state.setText("Bluetooth apagado");
             }
         }
+
 
     }
 
@@ -116,14 +131,51 @@ public class bluetooth extends AppCompatActivity {
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     public void listaVinculados(View view) {
         try {
+            // Limpiar listas anteriores
+            deviceList.clear();
+            deviceObjects.clear();
 
-            listVinculados = new ArrayList<>();
+            // Verificar si el Bluetooth está activado
+            if (!bluetoothAdapter.isEnabled()) {
+                Toast.makeText(this, "El Bluetooth está apagado. Enciéndalo primero.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-        }catch (Exception e){
-            Log.e("BLUETOOTH", "Error al listar: " + e.getMessage());
+            // Obtener dispositivos vinculados
+            Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+
+            if (pairedDevices.size() > 0) {
+                for (BluetoothDevice device : pairedDevices) {
+                    String deviceName = device.getName();
+                    String deviceAddress = device.getAddress();
+                    String deviceInfo = deviceName + " - " + deviceAddress;
+
+                    deviceList.add(deviceInfo);
+                    deviceObjects.add(device);
+                }
+                deviceListAdapter.notifyDataSetChanged();
+                Toast.makeText(this, "Se encontraron " + pairedDevices.size() + " dispositivos vinculados", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "No hay dispositivos vinculados", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Log.e("BLUETOOTH", "Error al mostrar dispositivos vinculados: " + e.getMessage());
+            Toast.makeText(this, "Error al obtener dispositivos vinculados", Toast.LENGTH_SHORT).show();
         }
+
     }
 
+    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+    private void setupListVinculados() {
+        // Configurar listener para la selección de dispositivos
+        listVinculados.setOnItemClickListener((parent, view, position, id) -> {
+            if (position >= 0 && position < deviceObjects.size()) {
+                BluetoothDevice selectedDevice = deviceObjects.get(position);
+                Toast.makeText(this, "Dispositivo seleccionado: " + selectedDevice.getName(), Toast.LENGTH_SHORT).show();
+                // Aquí puedes agregar código para conectarte al dispositivo
+            }
+        });
+    }
 
 
 
@@ -134,7 +186,14 @@ public class bluetooth extends AppCompatActivity {
 
         this.btnBlOn = findViewById(R.id.btnBlOn);
         this.btnBlOff = findViewById(R.id.btnBlOff);
+        this.btnListVinculados = findViewById(R.id.btnListVinculados);
         this.state = findViewById(R.id.state);
+        this.listVinculados = findViewById(R.id.listVinculados);
+        this.deviceList = new ArrayList<>();
+        this.deviceObjects = new ArrayList<>();
+        this.deviceListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, deviceList);
+        this.listVinculados.setAdapter(deviceListAdapter);
+        this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 
     }

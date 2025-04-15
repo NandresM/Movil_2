@@ -21,6 +21,7 @@
     <string name="state"></string>
     <string name="tvDispositivos">Dispositivos Vinculados:</string>
     <string name="listVinculados"></string>
+    <string name="btnListVinculados">Listar Vinculados</string>
 
 
     <string name="tvCamara">TOMA DE FOTO</string>
