@@ -6,34 +6,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="50dp"
-    tools:context=".camera">
+    android:padding="16dp"
 
+    tools:context=".camera">
     <TextView
         android:id="@+id/tvCamara"
         android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:text="@string/tvCamara"
-        android:textSize="30sp"
+        android:layout_height="wrap_content"
+        android:text="Cámara"
+        android:textSize="32sp"
+        android:layout_marginBottom="16dp"
         android:gravity="center" />
 
-    <ImageView
+    <androidx.camera.view.PreviewView
         android:id="@+id/fotoCamara"
-        android:layout_width="match_parent"
-        android:layout_height="407dp"
-        android:scaleType="centerCrop"
-        android:layout_marginBottom="16dp"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:layout_width="529dp"
+        android:layout_height="253dp"
+      />
 
+    <ImageView
+        android:id="@+id/previewImageView"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:layout_marginBottom="16dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone"/>
     <Button
         android:id="@+id/tomarFt"
-        android:layout_width="match_parent"
+        android:layout_width="201dp"
         android:layout_height="wrap_content"
-        android:text="@string/tomarFt" />
+        android:text="Tomar Foto"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center" />
 
     <Button
         android:id="@+id/guardarFt"
-        android:layout_width="match_parent"
+        android:layout_width="201dp"
         android:layout_height="wrap_content"
-        android:text="@string/guardarFt" />
+        android:text="Guardar Foto"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center"/>
+
+
+
 </LinearLayout>
