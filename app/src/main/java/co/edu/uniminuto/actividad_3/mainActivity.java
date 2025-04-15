@@ -3,31 +3,50 @@ package co.edu.uniminuto.actividad_3;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import android.Manifest;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class mainActivity extends AppCompatActivity {
 
+    private static final int REQUEST_STORAGE_PERMISSION = 1001;
     private Context context;
     private Activity activity;
     // Version del Android
@@ -54,6 +73,15 @@ public class mainActivity extends AppCompatActivity {
     private Button cam;
 
 
+
+   private Button btnSaveFile;
+
+    private String studentName;
+   private int levelBaterry;
+    private String androidVersion;
+
+
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,25 +100,40 @@ public class mainActivity extends AppCompatActivity {
         registerReceiver(broReceiver, baterryFilter);
         blutu.setOnClickListener(this::abrirBt);
         cam.setOnClickListener(this::abrirCam);
+        btnSaveFile.setOnClickListener(this::createFile);
 
-
-
-
-
+        // Verificar y solicitar permisos
+        // Permiso ya concedido, puedes crear el archivo
 
     }
 
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_STORAGE_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                createFile(findViewById(android.R.id.content));
+            } else {
+                Toast.makeText(this, "Permiso de almacenamiento denegado", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
         //versionAndroid
         String versionSO = Build.VERSION.RELEASE;
+        androidVersion = versionSO;
         versionSDK = Build.VERSION.SDK_INT;
         versionAndroid.setText("Version SO: "+versionSO+"/ SDK: "+versionSDK);
         //llamada metodo conexion
 
         checkConnection();
+        //validar permisos almacenimiento
+
 
     }
 
@@ -101,13 +144,16 @@ public class mainActivity extends AppCompatActivity {
         this.pbLevelBaterry = findViewById(R.id.pbLevelBattery);
         this.tvLevelBaterry = findViewById(R.id.tvLevelBatteryLB);
         //this.tvConexion = findViewById(R.id.tvState);
-        this.nameFile = findViewById(R.id.etNameFile);
+        this.nameFile = findViewById(R.id.nameFile);
         this.onFlash = findViewById(R.id.btnOn);
         this.offFlash = findViewById(R.id.btnOff);
         this.tvState = findViewById(R.id.tvState);
         //definir los bluetooh
         this.blutu = findViewById(R.id.bluetooth);
         this.cam = findViewById(R.id.camara);
+        this.btnSaveFile = findViewById(R.id.btnSaveFile);
+
+
 
     }
 
@@ -158,11 +204,99 @@ public class mainActivity extends AppCompatActivity {
     BroadcastReceiver broReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int levelBaterry = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+             levelBaterry = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+
             pbLevelBaterry.setProgress(levelBaterry);
             tvLevelBaterry.setText("Nivel de batería: "+String.valueOf(levelBaterry)+"%");
         }
     };
+
+    //Crear .txt
+
+    public void crearArchivoEnDescargas(View view) {
+        // En Android 10+ necesitamos WRITE_EXTERNAL_STORAGE solo para
+        // acceder a directorios fuera del espacio de la aplicación
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_STORAGE_PERMISSION);
+            return;
+        }
+
+        createFile(view);
+    }
+
+
+
+    public void createFile(View view) {
+        // Obtener el EditText y su contenido
+
+
+        String fileName = nameFile.getText().toString().trim();
+
+        // Validar que el nombre del archivo no esté vacío
+        if (fileName.isEmpty()) {
+            Toast.makeText(this, "Por favor, ingresa un nombre para el archivo.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+
+        // Crear el contenido del archivo usando StringBuilder
+        StringBuilder fileContentBuilder = new StringBuilder();
+        fileContentBuilder.append("Nombres estudiantes: ").append("Andres Mora, Alejandra Sarmiento").append("\n")
+                .append("Nivel de batería: ").append(levelBaterry).append("%\n")
+                .append("Versión de Android: ").append(androidVersion);
+
+        String fileContent = fileContentBuilder.toString();
+        // Verificar si la versión de Android soporta la API MediaStore
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            createFileWithMediaStore(fileName, fileContent);
+        } else {
+            // Proporcionar un método alternativo para versiones anteriores de Android
+           // createFileWithLegacyMethod(fileName, fileContent);
+        }
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private void createFileWithMediaStore(String fileName, String content) {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName + ".txt");
+        values.put(MediaStore.MediaColumns.MIME_TYPE, "text/plain");
+        values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+
+        ContentResolver resolver = getContentResolver();
+        Uri uri = null;
+
+        try {
+            uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+            if (uri != null) {
+                try (OutputStream outputStream = resolver.openOutputStream(uri)) {
+                    if (outputStream != null) {
+                        outputStream.write(content.getBytes());
+                        Toast.makeText(this, "Archivo creado en Descargas: " + fileName + ".txt",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error al crear el archivo: " + e.getMessage(),
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     public void abrirBt(View view) {

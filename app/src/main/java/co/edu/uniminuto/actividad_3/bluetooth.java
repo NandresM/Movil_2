@@ -2,8 +2,12 @@ package co.edu.uniminuto.actividad_3;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,12 +24,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class bluetooth extends AppCompatActivity {
 
     private Button btnBlOn;
     private Button btnBlOff;
     public TextView state;
     private BluetoothAdapter bluetoothAdapter;
+    private List<BluetoothDevice> listVinculados;
 
     
     
@@ -102,6 +110,21 @@ public class bluetooth extends AppCompatActivity {
         }
 
     }
+
+
+    //lista de vinculados
+    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+    public void listaVinculados(View view) {
+        try {
+
+            listVinculados = new ArrayList<>();
+
+        }catch (Exception e){
+            Log.e("BLUETOOTH", "Error al listar: " + e.getMessage());
+        }
+    }
+
+
 
 
 

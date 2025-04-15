@@ -76,13 +76,13 @@
         android:text="@string/tvStorage" />
 
     <EditText
-        android:id="@+id/etNameFile"
+        android:id="@+id/nameFile"
         android:layout_width="368dp"
         android:layout_height="wrap_content"
         android:hint="Enter file name"
         android:minHeight="48dp" />
 
-    <ImageButton
+    <Button
         android:id="@+id/btnSaveFile"
         android:layout_width="369dp"
         android:layout_height="53dp"
