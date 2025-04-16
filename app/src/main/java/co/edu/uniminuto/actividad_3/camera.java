@@ -70,8 +70,8 @@ public class camera extends AppCompatActivity {
     private ImageCapture captureImage;
     private ExecutorService ejecutarCamara;
     private ImageView previewImageView;
-    private Uri lastCapturedImageUri; // Para guardar la URI de la imagen capturada
-    private File photoFile; // Guardar referencia al archivo temporal
+    private Uri lastCapturedImageUri;
+    private File photoFile;
 
     private static final String TAG = "CameraActivity";
     private static final int REQUEST_CODE_PERMISSIONS = 10;
@@ -97,18 +97,17 @@ public class camera extends AppCompatActivity {
 
         // Configuración inicial de botones
         tomarFt.setEnabled(false);
-        guardarFt.setEnabled(false); // Inicialmente deshabilitado
-        guardarFt.setVisibility(View.GONE); // Oculto hasta que se tome una foto
+        guardarFt.setEnabled(false);
+        guardarFt.setVisibility(View.GONE);
 
         // Configurar listeners
         tomarFt.setOnClickListener(this::tomarFoto);
         guardarFt.setOnClickListener(this::guardarFoto);
 
-        // Solicitar permisos inmediatamente al iniciar la actividad
+        // Solicitar permisos
         requestCameraPermissions();
     }
 
-    // Método para solicitar permisos de forma explícita
     private void requestCameraPermissions() {
         if (allPermissionsGranted()) {
             Log.d(TAG, "Todos los permisos concedidos, iniciando cámara");
@@ -119,7 +118,7 @@ public class camera extends AppCompatActivity {
         }
     }
 
-    // Nuevo método para configurar la cámara y habilitar botones una vez que hay permisos
+    // Nuevo metodo
     private void setupCameraAndButtons() {
         openCamera();
         tomarFt.setEnabled(true);
@@ -139,7 +138,7 @@ public class camera extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            // Verificar si todos los permisos fueron concedidos
+            // Verificar  permisos
             boolean allGranted = true;
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
@@ -198,9 +197,9 @@ public class camera extends AppCompatActivity {
 
             // Mejorar la configuración para captura de imagen con mayor calidad
             captureImage = new ImageCapture.Builder()
-                    .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY) // Maximizar calidad en lugar de latencia
-                    .setTargetRotation(getWindowManager().getDefaultDisplay().getRotation()) // Ajustar rotación
-                    .setFlashMode(ImageCapture.FLASH_MODE_AUTO) // Flash automático
+                    .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
+                    .setTargetRotation(getWindowManager().getDefaultDisplay().getRotation())
+                    .setFlashMode(ImageCapture.FLASH_MODE_AUTO)
                     .build();
 
             // Establecer proveedor de superficie y vincular al ciclo de vida
@@ -208,14 +207,14 @@ public class camera extends AppCompatActivity {
 
             // Vincular los casos de uso a la cámara
             Camera camera = cameraProvider.bindToLifecycle(
-                    this, // LifecycleOwner
+                    this,
                     cameraSelector,
                     preview,
                     captureImage);
 
-            // Habilitar zoom y otras características si están disponibles
+            // Habilitar características
             if (camera.getCameraInfo().hasFlashUnit()) {
-                // Podrías añadir un botón para controlar el flash aquí
+
             }
 
             Log.d(TAG, "Vista previa de cámara configurada correctamente");
@@ -226,7 +225,7 @@ public class camera extends AppCompatActivity {
         }
     }
 
-    // Tomar la foto - ahora solo la guarda en memoria para previsualizar
+    // Tomar la foto
     private void tomarFoto(View view) {
         if (captureImage == null) {
             Log.e(TAG, "Error: captureImage es null");
@@ -234,10 +233,8 @@ public class camera extends AppCompatActivity {
             return;
         }
 
-        // Desactivar botón temporalmente para evitar múltiples capturas
-        tomarFt.setEnabled(false);
 
-        // Crear archivo temporal para la imagen
+        tomarFt.setEnabled(false);
         photoFile = createTempFile();
         ImageCapture.OutputFileOptions outputOptions =
                 new ImageCapture.OutputFileOptions.Builder(photoFile).build();
@@ -247,13 +244,9 @@ public class camera extends AppCompatActivity {
                 new ImageCapture.OnImageSavedCallback() {
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        // Guardar referencia de la imagen
+
                         lastCapturedImageUri = Uri.fromFile(photoFile);
-
-                        // Mostrar imagen en vista previa
                         mostrarVistaPrevia(photoFile);
-
-                        // Cambiar visibilidad de botones - estilo Instagram
                         tomarFt.setVisibility(View.GONE);
                         guardarFt.setVisibility(View.VISIBLE);
                         guardarFt.setEnabled(true);
@@ -263,7 +256,7 @@ public class camera extends AppCompatActivity {
 
                     @Override
                     public void onError(@NonNull ImageCaptureException exception) {
-                        // Error al guardar la foto
+
                         Log.e(TAG, "Error al tomar la foto: " + exception.getMessage(), exception);
                         Toast.makeText(camera.this, "Error al tomar la foto: " +
                                 exception.getMessage(), Toast.LENGTH_SHORT).show();
@@ -275,19 +268,14 @@ public class camera extends AppCompatActivity {
     // Mostrar la imagen capturada en vista previa
     private void mostrarVistaPrevia(File photoFile) {
         if (previewImageView != null) {
-            // Optimizar carga de imagen usando escala
             BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 2; // Escala la imagen reduciendo a 1/2 el tamaño
-
+            options.inSampleSize = 2;
             Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), options);
-
-            // Rotar bitmap si es necesario
             bitmap = rotarImagenSiEsNecesario(bitmap, photoFile.getAbsolutePath());
 
             previewImageView.setImageBitmap(bitmap);
             previewImageView.setVisibility(View.VISIBLE);
 
-            // Ocultar la vista previa de la cámara
             fotoCamara.setVisibility(View.GONE);
         }
     }
@@ -324,42 +312,31 @@ public class camera extends AppCompatActivity {
 
     // Crear un archivo temporal para la vista previa
     private File createTempFile() {
-        // Crear un nombre de archivo único basado en la marca de tiempo
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String fileName = "TEMP_" + timeStamp + ".jpg";
-
-        // Obtener el directorio de almacenamiento de la app
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         return new File(storageDir, fileName);
     }
 
-    // Guardar la foto permanentemente en la galería
     private void guardarFoto(View view) {
         if (lastCapturedImageUri == null || photoFile == null || !photoFile.exists()) {
             Toast.makeText(this, "No hay imagen para guardar", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Desactivar botón mientras se guarda
-        guardarFt.setEnabled(false);
 
-        // Guardar la imagen en la galería pública
+        guardarFt.setEnabled(false);
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "IMG_" +
                 new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date()));
         contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
-
-        // Para Android 10 (API 29) y superiores
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
         }
-
         ContentResolver resolver = getContentResolver();
         Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-
         if (imageUri != null) {
             try {
-                // Copiar desde archivo temporal al URI de MediaStore
                 try (OutputStream outputStream = resolver.openOutputStream(imageUri);
                      InputStream inputStream = new FileInputStream(photoFile)) {
 
@@ -368,11 +345,8 @@ public class camera extends AppCompatActivity {
                     while ((bytesRead = inputStream.read(buffer)) != -1) {
                         outputStream.write(buffer, 0, bytesRead);
                     }
-
                     Toast.makeText(this, "Imagen guardada en la galería", Toast.LENGTH_SHORT).show();
                 }
-
-                // Volver al modo cámara
                 volverAModoCamara();
 
             } catch (IOException e) {
@@ -389,23 +363,16 @@ public class camera extends AppCompatActivity {
 
     // Volver al modo cámara después de guardar o cancelar
     private void volverAModoCamara() {
-        // Ocultar vista previa y volver a la cámara
         if (previewImageView != null) {
             previewImageView.setVisibility(View.GONE);
         }
         fotoCamara.setVisibility(View.VISIBLE);
-
-        // Restablecer botones
         guardarFt.setVisibility(View.GONE);
         tomarFt.setVisibility(View.VISIBLE);
         tomarFt.setEnabled(true);
-
-        // Eliminar archivo temporal si todavía existe
         if (photoFile != null && photoFile.exists()) {
             photoFile.delete();
         }
-
-        // Limpiar URI
         lastCapturedImageUri = null;
     }
 
@@ -416,7 +383,6 @@ public class camera extends AppCompatActivity {
         this.fotoCamara = findViewById(R.id.fotoCamara);
         this.previewImageView = findViewById(R.id.previewImageView);
 
-        // Si tienes el ImageView en tu layout, asegúrate de que esté inicialmente oculto
         if (this.previewImageView != null) {
             this.previewImageView.setVisibility(View.GONE);
         }
@@ -424,7 +390,6 @@ public class camera extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // Si estamos en modo vista previa, volver a la cámara
         if (previewImageView != null && previewImageView.getVisibility() == View.VISIBLE) {
             volverAModoCamara();
         } else {
@@ -438,8 +403,6 @@ public class camera extends AppCompatActivity {
         if (ejecutarCamara != null) {
             ejecutarCamara.shutdown();
         }
-
-        // Limpiar archivos temporales
         if (photoFile != null && photoFile.exists()) {
             photoFile.delete();
         }

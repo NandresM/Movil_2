@@ -9,25 +9,25 @@
     android:padding="16dp"
 
     tools:context=".camera">
+
     <TextView
         android:id="@+id/tvCamara"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cámara"
-        android:textSize="32sp"
+        android:layout_width="648dp"
+        android:layout_height="75dp"
         android:layout_marginBottom="16dp"
-        android:gravity="center" />
+        android:text="Cámara"
+        android:textSize="32sp" />
 
     <androidx.camera.view.PreviewView
         android:id="@+id/fotoCamara"
-        android:layout_width="529dp"
+        android:layout_width="651dp"
         android:layout_height="253dp"
-      />
+        android:layout_marginBottom="16dp" />
 
     <ImageView
         android:id="@+id/previewImageView"
-        android:layout_width="match_parent"
-        android:layout_height="270dp"
+        android:layout_width="519dp"
+        android:layout_height="253dp"
         android:layout_marginBottom="16dp"
         android:scaleType="centerCrop"
         android:visibility="gone"/>

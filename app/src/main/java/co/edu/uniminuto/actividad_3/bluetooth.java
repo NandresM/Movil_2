@@ -102,7 +102,7 @@ public class bluetooth extends AppCompatActivity {
 
         try {
             if (!bluetoothAdapter.isEnabled()) {
-                bluetoothAdapter.enable();  // Esto requiere permisos BLUETOOTH_ADMIN
+                bluetoothAdapter.enable();
                 Toast.makeText(this, "Encendiendo Bluetooth", Toast.LENGTH_SHORT).show();
             }
             state.setText("Bluetooth encendido");
@@ -172,7 +172,7 @@ public class bluetooth extends AppCompatActivity {
             if (position >= 0 && position < deviceObjects.size()) {
                 BluetoothDevice selectedDevice = deviceObjects.get(position);
                 Toast.makeText(this, "Dispositivo seleccionado: " + selectedDevice.getName(), Toast.LENGTH_SHORT).show();
-                // Aquí puedes agregar código para conectarte al dispositivo
+
             }
         });
     }

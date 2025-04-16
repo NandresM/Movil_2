@@ -93,6 +93,13 @@ public class mainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
+    openMetodo();
+
+    }
+
+    private void openMetodo(){
         initObjects();
         onFlash.setOnClickListener(this::onLigth);
         offFlash.setOnClickListener(this::offLigth);
@@ -101,10 +108,6 @@ public class mainActivity extends AppCompatActivity {
         blutu.setOnClickListener(this::abrirBt);
         cam.setOnClickListener(this::abrirCam);
         btnSaveFile.setOnClickListener(this::createFile);
-
-        // Verificar y solicitar permisos
-        // Permiso ya concedido, puedes crear el archivo
-
     }
 
 
@@ -143,7 +146,6 @@ public class mainActivity extends AppCompatActivity {
         this.versionAndroid = findViewById(R.id.tvVersionAndroid);
         this.pbLevelBaterry = findViewById(R.id.pbLevelBattery);
         this.tvLevelBaterry = findViewById(R.id.tvLevelBatteryLB);
-        //this.tvConexion = findViewById(R.id.tvState);
         this.nameFile = findViewById(R.id.nameFile);
         this.onFlash = findViewById(R.id.btnOn);
         this.offFlash = findViewById(R.id.btnOff);
@@ -214,8 +216,6 @@ public class mainActivity extends AppCompatActivity {
     //Crear .txt
 
     public void crearArchivoEnDescargas(View view) {
-        // En Android 10+ necesitamos WRITE_EXTERNAL_STORAGE solo para
-        // acceder a directorios fuera del espacio de la aplicación
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(
@@ -230,32 +230,21 @@ public class mainActivity extends AppCompatActivity {
 
 
     public void createFile(View view) {
-        // Obtener el EditText y su contenido
-
-
         String fileName = nameFile.getText().toString().trim();
-
-        // Validar que el nombre del archivo no esté vacío
         if (fileName.isEmpty()) {
             Toast.makeText(this, "Por favor, ingresa un nombre para el archivo.", Toast.LENGTH_SHORT).show();
             return;
         }
-
-
-
-        // Crear el contenido del archivo usando StringBuilder
         StringBuilder fileContentBuilder = new StringBuilder();
         fileContentBuilder.append("Nombres estudiantes: ").append("Andres Mora, Alejandra Sarmiento").append("\n")
                 .append("Nivel de batería: ").append(levelBaterry).append("%\n")
                 .append("Versión de Android: ").append(androidVersion);
 
         String fileContent = fileContentBuilder.toString();
-        // Verificar si la versión de Android soporta la API MediaStore
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             createFileWithMediaStore(fileName, fileContent);
         } else {
-            // Proporcionar un método alternativo para versiones anteriores de Android
-           // createFileWithLegacyMethod(fileName, fileContent);
+
         }
 
     }
@@ -287,13 +276,6 @@ public class mainActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
-
-
-
-
 
 
 
